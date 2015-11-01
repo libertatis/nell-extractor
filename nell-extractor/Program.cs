@@ -12,8 +12,7 @@ namespace nell_extractor
     class Entry
     {
         public string Entity;
-        public string Category;
-        public string OtherCategories;
+        public string Categories;
         public string Name;
     }
 
@@ -55,7 +54,7 @@ namespace nell_extractor
             using(StreamWriter writer = new StreamWriter(conceptString+".txt"))
             {
                 foreach (Entry e in cleanedEntries)
-                    writer.WriteLine(e.Entity + "\t" + e.Category + " " + e.OtherCategories + "\t" + e.Name);
+                    writer.WriteLine(e.Entity + "\t" + e.Categories + "\t" + e.Name);
             }
 
             Console.WriteLine("Found a total of {0} entries, written to {1}.", cleanedEntries.Count, conceptString+".txt");
@@ -65,17 +64,15 @@ namespace nell_extractor
         public static bool IsRelatedToConcept(string[] columns)
         {
             return (columns[2] == concept || columns[10].Contains(concept) || (generalised && columns[11].Contains(concept)));
-            //if you want 'indirect' things - e.g. condiments listed as concept:condiment, as condiment is an instance of food - use this as well.
-            //  || columns[11].Contains(concept));
         }
 
         public static Entry GenerateEntry(string[] columns)
         {
+            HashSet<string> categories = new HashSet<string>((columns[2].Trim() + " " + columns[10].Trim()).Trim().Split(' ').Select(t => t.Split(':').Last()));
             return new Entry()
             {
                 Entity = columns[0].Split(':').Last(),
-                Category = columns[2].Split(':').Last(),
-                OtherCategories = String.Join(" ", (columns[10]).Split(' ').Select(t => t.Split(':').Last()).Where(c => c != columns[2].Split(':').Last())),
+                Categories = String.Join(" ", categories),
                 Name = columns[8]
             };
         }
