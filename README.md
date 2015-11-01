@@ -6,7 +6,7 @@ Download the data from NELL: http://rtw.ml.cmu.edu/rtw/resources (top link)
 Rename to 'nell.csv'
 Run from the command line:
 
-nell-extractor.exe <category> <generalised>
+nell-extractor.exe \<category\> \<generalised\>
 
 Where category is the type of concept (e.g. food, beverage, televisionstation) and generalised is either 'general' or any other string.
 
